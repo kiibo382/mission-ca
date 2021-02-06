@@ -3,8 +3,8 @@ services:
   go:
     restart: always
     build:
-      context: ./docker/go
-      dockerfile: ./Dockerfile
+      context: ./go
+      dockerfile: Dockerfile
     container_name: go
     ports:
       - 8000:8000
@@ -17,7 +17,7 @@ services:
     restart: always
     build: 
       context: ./mysql
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
     container_name: mysql
     environment:
       MYSQL_DATABASE: mysql_db
