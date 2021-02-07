@@ -3,20 +3,26 @@ services:
   go:
     restart: always
     build:
-      context: ./go
+      context: ./build/app
       dockerfile: Dockerfile
     container_name: go
     ports:
       - 8000:8000
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: mysql_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+      MYSQL_ROOT_PASSWORD: rootpass
     tty:
       true
-    volumes:
-      - ./go:/go
+    depends_on:
+      - mysql
 
   mysql:
     restart: always
     build: 
-      context: ./mysql
+      context: ./build/db
       dockerfile: Dockerfile
     container_name: mysql
     environment:
@@ -29,5 +35,3 @@ services:
       - ./log/mysql:/var/log/mysql
     ports:
       - 3306:3306
-    links:
-      - go

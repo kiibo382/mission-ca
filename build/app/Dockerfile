@@ -1,4 +1,4 @@
-FROM golang:1.15.8-alpine3.13 as builder
+FROM golang:1.15.7-alpine as builder
 
 RUN apk update && \
     apk add --no-cache git mysql-client
