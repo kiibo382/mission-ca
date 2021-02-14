@@ -12,7 +12,7 @@ var DbEngine *xorm.Engine
 
 func init()  {
     driverName := "mysql"
-    DsName := "root:root@(192.168.99.100:3306)/gin?charset=utf8"
+    DsName := "root:rootpass@@tcp([127.0.0.1]:3306)/mysql_db?charset=utf8"
     err := errors.New("")
     DbEngine, err = xorm.NewEngine(driverName,DsName)
     if err != nil && err.Error() != ""{

@@ -1,23 +1,23 @@
 version: '3'
 services:
-  go:
-    restart: always
-    build:
-      context: ./build/app
-      dockerfile: Dockerfile
-    container_name: go
-    ports:
-      - 8000:8000
-    environment:
-      MYSQL_HOST: mysql
-      MYSQL_DATABASE: mysql_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: pass
-      MYSQL_ROOT_PASSWORD: rootpass
-    tty:
-      true
-    depends_on:
-      - mysql
+  # go:
+  #   restart: always
+  #   build:
+  #     context: ./build/app
+  #     dockerfile: Dockerfile
+  #   container_name: go
+  #   ports:
+  #     - 8000:8000
+  #   environment:
+  #     MYSQL_HOST: mysql
+  #     MYSQL_DATABASE: mysql_db
+  #     MYSQL_USER: user
+  #     MYSQL_PASSWORD: pass
+  #     MYSQL_ROOT_PASSWORD: rootpass
+  #   tty:
+  #     true
+  #   depends_on:
+  #     - mysql
 
   mysql:
     restart: always
@@ -32,6 +32,6 @@ services:
       MYSQL_ROOT_PASSWORD: rootpass
       TZ: 'Asia/Tokyo'
     volumes:
-      - ./log/mysql:/var/log/mysql
+      - ./build/db/log/mysql:/var/log/mysql
     ports:
       - 3306:3306

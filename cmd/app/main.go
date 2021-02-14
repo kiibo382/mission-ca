@@ -1,7 +1,7 @@
 package main
 
 import (
-    "net/http"
+    // "net/http"
     "github.com/gin-gonic/gin"
     _ "github.com/go-sql-driver/mysql"
     "github.com/kiibo382/mission-ca/pkg/controller"
@@ -32,21 +32,21 @@ func main(){
 
 	// However, this one will match /user/john/ and also /user/john/send
 	// If no other routers match /user/john, it will redirect to /user/john/
-	router.GET("/users/:name/*action", func(c *gin.Context) {
-		name := c.Param("name")
-		action := c.Param("action")
-		message := name + " is " + action
-		c.String(http.StatusOK, message)
-	})
+	// router.GET("/users/:name/*action", func(c *gin.Context) {
+	// 	name := c.Param("name")
+	// 	action := c.Param("action")
+	// 	message := name + " is " + action
+	// 	c.String(http.StatusOK, message)
+	// })
 
     // Query string parameters are parsed using the existing underlying request object.
 	// The request responds to a url matching:  /welcome?firstname=Jane&lastname=Doe
-    router.GET("/welcome", func(c *gin.Context) {
-		firstname := c.DefaultQuery("firstname", "Guest")
-		lastname := c.Query("lastname") // shortcut for c.Request.URL.Query().Get("lastname")
+    // router.GET("/welcome", func(c *gin.Context) {
+	// 	firstname := c.DefaultQuery("firstname", "Guest")
+	// 	lastname := c.Query("lastname") // shortcut for c.Request.URL.Query().Get("lastname")
 
-		c.String(http.StatusOK, "Hello %s %s", firstname, lastname)
-	})
+	// 	c.String(http.StatusOK, "Hello %s %s", firstname, lastname)
+	// })
 
 	// For each matched request Context will hold the route definition
 	// router.POST("/user/:name/*action", func(c *gin.Context) {

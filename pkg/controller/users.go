@@ -18,7 +18,7 @@ func UsersAdd(c *gin.Context) {
     userService := service.UserService{}
     err = userService.SetUsers(&user)
     if err != nil{
-        c.String(http.StatusInternalServerError, "Server Error")
+        c.String(http.StatusInternalServerError, "Server Errorrr")
         return
     }
     c.JSON(http.StatusCreated, gin.H{
