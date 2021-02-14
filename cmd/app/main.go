@@ -17,8 +17,8 @@ func main(){
     {
         v1 := usersRouter.Group("/v1")
         {
-            v1.POST("/add", controller.UsersAdd)
-            v1.GET("/list", controller.UsersList)
+            v1.POST("/create", controller.UsersAdd)
+            v1.GET("/get", controller.UsersGet)
             v1.PUT("/update", controller.UsersUpdate)
             v1.DELETE("/delete", controller.UsersDelete)
         }

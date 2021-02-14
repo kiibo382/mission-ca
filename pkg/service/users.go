@@ -15,7 +15,7 @@ func (UserService) SetUsers(user *model.Users) error {
 }
 
 
-func (UserService) GetUsersList() []model.Users {
+func (UserService) GetUsers() []model.Users {
     tests := make([]model.Users, 0)
     err := DbEngine.Distinct("id", "title", "content").Limit(10, 0).Find(&tests)
     if err != nil {

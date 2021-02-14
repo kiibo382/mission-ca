@@ -26,12 +26,12 @@ func UsersAdd(c *gin.Context) {
     })
 }
 
-func UsersList(c *gin.Context){
+func UsersGet(c *gin.Context){
     userService := service.UserService{}
-    usersList := userService.GetUsersList()
+    userdata := userService.GetUsers()
     c.JSONP(http.StatusOK, gin.H{
         "message": "ok",
-        "data": usersList,
+        "data": userdata,
     })
 }
 

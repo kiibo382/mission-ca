@@ -18,7 +18,7 @@ tags:
 schemes:
   - "http"
 paths:
-  /user/create:
+  /users/create:
     post:
       tags:
         - "user"
@@ -42,7 +42,7 @@ paths:
           "schema":
             "$ref": "#/definitions/UserCreateResponse"
 
-  /user/get:
+  /users/get:
     get:
       tags:
         - "user"
@@ -65,7 +65,7 @@ paths:
           "schema":
             "$ref": "#/definitions/UserGetResponse"
 
-  /user/update:
+  /users/update:
     put:
       tags:
         - "user"
