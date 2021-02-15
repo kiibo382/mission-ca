@@ -1,0 +1,4 @@
+development:
+  dialect: mysql
+  datasource: root:rootpass@tcp(127.0.0.1)/mysql_db?charset=utf8mb4&collation=utf8mb4_general_ci&parseTime=true
+  dir: migrations
