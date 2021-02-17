@@ -1,6 +1,7 @@
 package db
 
 import  (
+	"os"
 	"fmt"
 	"log"
 	"database/sql"
@@ -19,6 +20,4 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-
 }
