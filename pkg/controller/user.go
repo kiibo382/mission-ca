@@ -1,7 +1,8 @@
 package controller
 
 import (
-	"fmt"
+	// "fmt"
+	// "go/token"
 	"net/http"
 	"strconv"
 
@@ -9,13 +10,13 @@ import (
 	"github.com/kiibo382/mission-ca/pkg/service"
 
 	"github.com/gin-gonic/gin"
-	// "github.com/google/uuid"
+	"github.com/google/uuid"
 )
 
 func UserAdd(c *gin.Context) {
 	user := model.User{}
-	// token := uuid.New().String()
-	fmt.Println(c)
+	token := uuid.New().String()
+	user.Token = token
 	err := c.Bind(&user)
 	if err != nil {
 		c.String(http.StatusBadRequest, "Bad request")
@@ -28,7 +29,7 @@ func UserAdd(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{
-		"status": "ok",
+		"token": token,
 	})
 }
 
@@ -36,7 +37,6 @@ func UserList(c *gin.Context) {
 	userService := service.UserService{}
 	UserLists := userService.GetUserList()
 	c.JSONP(http.StatusOK, gin.H{
-		"message": "ok",
 		"data":    UserLists,
 	})
 }
