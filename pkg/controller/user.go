@@ -1,27 +1,41 @@
 package controller
 
 import (
-	// "fmt"
-	// "go/token"
 	"net/http"
+	"os"
 	"strconv"
+	"time"
 
 	"github.com/kiibo382/mission-ca/pkg/model"
 	"github.com/kiibo382/mission-ca/pkg/service"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+
+	jwt "github.com/form3tech-oss/jwt-go"
 )
 
 func UserAdd(c *gin.Context) {
 	user := model.User{}
-	token := uuid.New().String()
-	user.Token = token
+	user.Id = uuid.New().String()
 	err := c.Bind(&user)
+
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+	claims["admin"] = true
+	claims["sub"] = user.Id
+	claims["name"] = user.Name
+	claims["iat"] = time.Now()
+	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+
+	tokenString, _ := token.SignedString([]byte(os.Getenv("SIGNINGKEY")))
+	user.Token = tokenString
+
 	if err != nil {
 		c.String(http.StatusBadRequest, "Bad request")
 		return
 	}
+
 	userService := service.UserService{}
 	err = userService.SetUser(&user)
 	if err != nil {
@@ -29,7 +43,7 @@ func UserAdd(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{
-		"token": token,
+		"token": tokenString,
 	})
 }
 
@@ -37,7 +51,7 @@ func UserList(c *gin.Context) {
 	userService := service.UserService{}
 	UserLists := userService.GetUserList()
 	c.JSONP(http.StatusOK, gin.H{
-		"data":    UserLists,
+		"data": UserLists,
 	})
 }
 
