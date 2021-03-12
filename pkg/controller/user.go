@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 
-	jwt "github.com/form3tech-oss/jwt-go"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 func UserAdd(c *gin.Context) {
@@ -32,14 +32,14 @@ func UserAdd(c *gin.Context) {
 	user.Token = tokenString
 
 	if err != nil {
-		c.String(http.StatusBadRequest, "Bad request")
+		c.String(http.StatusBadRequest, "Bad Request")
 		return
 	}
 
 	userService := service.UserService{}
 	err = userService.SetUser(&user)
 	if err != nil {
-		c.String(http.StatusInternalServerError, "Server Error")
+		c.String(http.StatusConflict, "Sorry, username alredy exists. Please change username.")
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{
