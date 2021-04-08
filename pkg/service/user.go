@@ -1,10 +1,16 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com/kiibo382/mission-ca/pkg/model"
 )
 
 type UserService struct{}
+
+type UserDataStruct struct{
+	Name  string `json:"name"`
+}
 
 func (UserService) SetUser(user *model.User) error {
 	_, err := DbEngine.Insert(user)
@@ -14,13 +20,23 @@ func (UserService) SetUser(user *model.User) error {
 	return nil
 }
 
+func (UserService) GetUserData(user *model.User) UserDataStruct {
+	UserData := UserDataStruct{}
+	err := DbEngine.Where("token = ?", user.Token).Cols("name").Find(&user)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	return UserData
+}
+
 func (UserService) GetUserList() []model.User {
-	tests := make([]model.User, 0)
-	err := DbEngine.Distinct("id", "name").Limit(10, 0).Find(&tests)
+	userList := make([]model.User, 0)
+	err := DbEngine.Distinct("name").Limit(10, 0).Find(&userList)
 	if err != nil {
 		panic(err)
 	}
-	return tests
+	return userList
 }
 
 func (UserService) UpdateUser(newUser *model.User) error {

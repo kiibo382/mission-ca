@@ -47,6 +47,20 @@ func UserAdd(c *gin.Context) {
 	})
 }
 
+func UserGet(c *gin.Context) {
+	user := model.User{}
+	err := c.Bind(&user)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Bad request")
+		return
+	}
+	userService := service.UserService{}
+	UserData := userService.GetUserData(&user)
+	c.JSONP(http.StatusOK, gin.H{
+		"data": UserData,
+	})
+}
+
 func UserList(c *gin.Context) {
 	userService := service.UserService{}
 	UserLists := userService.GetUserList()
