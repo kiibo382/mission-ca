@@ -1,7 +1,7 @@
 package model
 
-type User struct {
-	Id    string `xorm:"pk varchar(255)"`
-	Name  string `xorm:"varchar(255) unique" json:"name"`
-	Token string `xorm:"varchar(512)"`
+type GormUser struct {
+	Id    string `gorm:"primaryKey string"`
+	Name  string `gorm:"string unique" json:"name"`
+	Token string `gorm:"string"`
 }

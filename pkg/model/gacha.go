@@ -1,21 +1,17 @@
 package model
 
-import (	
-	_"github.com/jinzhu/gorm"
-)
-
 type Gacha struct{
 	Time int `json:"times"`
 	Token string `json:"token"`
 }
 type Post struct{
-	PostID uint `gorm:"not null"`
+	PostID uint `gorm:"primaryKey"`
 	CharaID uint
 	Chara string 
 }
 type Result struct {
-	CharaID  uint
-	Chara string
+	CharaID  uint `gorm: "primaryKey string"`
+	Chara string `gorm: "string" json: "chara"`
 }
 
 type Character struct {

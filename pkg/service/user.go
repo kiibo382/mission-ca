@@ -6,50 +6,50 @@ import (
 	"github.com/kiibo382/mission-ca/pkg/model"
 )
 
-type UserService struct{}
+type GormUserService struct{}
 
-type UserDataStruct struct{
+type GormUserDataStruct struct{
 	Name  string `json:"name"`
 }
 
-func (UserService) SetUser(user *model.User) error {
-	_, err := DbEngine.Insert(user)
+func (GormUserService) GormSetUser(gormUser *model.GormUser) error {
+	_, err := db.Create(gormUser)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (UserService) GetUserData(user *model.User) UserDataStruct {
-	UserData := UserDataStruct{}
-	err := DbEngine.Where("token = ?", user.Token).Cols("name").Find(&user)
+func (GormUserService) GormGetUserData(gormUser *model.GormUser) GormUserDataStruct {
+	GormUserData := GormUserDataStruct{}
+	err := DbEngine.Where("token = ?", gormUser.Token).Cols("name").Find(&gormUser)
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
 	}
-	return UserData
+	return GormUserData
 }
 
-func (UserService) GetUserList() []model.User {
-	userList := make([]model.User, 0)
-	err := DbEngine.Distinct("name").Limit(10, 0).Find(&userList)
+func (GormUserService) GormGetUserList() []model.GormUser {
+	gormUserList := make([]model.GormUser, 0)
+	err := DbEngine.Distinct("name").Limit(10, 0).Find(&gormUserList)
 	if err != nil {
 		panic(err)
 	}
-	return userList
+	return gormUserList
 }
 
-func (UserService) UpdateUser(newUser *model.User) error {
-	_, err := DbEngine.Id(newUser.Id).Update(newUser)
+func (GormUserService) GormUpdateUser(gormNewUser *model.GormUser) error {
+	_, err := DbEngine.Id(gormNewUser.Id).Update(gormNewUser)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (UserService) DeleteUser(id int) error {
-	user := new(model.User)
-	_, err := DbEngine.Id(id).Delete(user)
+func (GormUserService) GormDeleteUser(id int) error {
+	gormUser := new(model.GormUser)
+	_, err := DbEngine.Id(id).Delete(gormUser)
 	if err != nil {
 		return err
 	}
