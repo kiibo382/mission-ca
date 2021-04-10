@@ -19,6 +19,10 @@ func UserAdd(c *gin.Context) {
 	user := model.User{}
 	user.Id = uuid.New().String()
 	err := c.Bind(&user)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Bad Request")
+		return
+	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
@@ -28,13 +32,11 @@ func UserAdd(c *gin.Context) {
 	claims["iat"] = time.Now()
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 
-	tokenString, _ := token.SignedString([]byte(os.Getenv("SIGNINGKEY")))
-	user.Token = tokenString
-
-	if err != nil {
-		c.String(http.StatusBadRequest, "Bad Request")
+	tokenString, tokenErr := token.SignedString([]byte(os.Getenv("SIGNINGKEY")))
+	if tokenErr != nil {
 		return
 	}
+	user.Token = tokenString
 
 	userService := service.UserService{}
 	err = userService.SetUser(&user)

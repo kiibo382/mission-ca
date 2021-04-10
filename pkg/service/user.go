@@ -6,52 +6,52 @@ import (
 	"github.com/kiibo382/mission-ca/pkg/model"
 )
 
-type GormUserService struct{}
+type UserService struct{}
 
-type GormUserDataStruct struct{
+type UserDataStruct struct{
 	Name  string `json:"name"`
 }
 
-func (GormUserService) GormSetUser(gormUser *model.GormUser) error {
-	_, err := db.Create(gormUser)
-	if err != nil {
-		return err
+func (UserService) SetUser(user *model.User) error {
+	result := Db.Create(user)
+	if result.Error != nil {
+		return result.Error
 	}
 	return nil
 }
 
-func (GormUserService) GormGetUserData(gormUser *model.GormUser) GormUserDataStruct {
-	GormUserData := GormUserDataStruct{}
-	err := DbEngine.Where("token = ?", gormUser.Token).Cols("name").Find(&gormUser)
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
+func (UserService) GetUserData(user *model.User) UserDataStruct {
+	UserData := UserDataStruct{}
+	result := Db.Where("token = ?", user.Token).Select("name").Find(user)
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		panic(result.Error)
 	}
-	return GormUserData
+	return UserData
 }
 
-func (GormUserService) GormGetUserList() []model.GormUser {
-	gormUserList := make([]model.GormUser, 0)
-	err := DbEngine.Distinct("name").Limit(10, 0).Find(&gormUserList)
-	if err != nil {
-		panic(err)
+func (UserService) GetUserList() []model.User {
+	userList := make([]model.User, 0)
+	result := Db.Limit(10).Select("name").Find(&userList)
+	if result.Error != nil {
+		panic(result.Error)
 	}
-	return gormUserList
+	return userList
 }
 
-func (GormUserService) GormUpdateUser(gormNewUser *model.GormUser) error {
-	_, err := DbEngine.Id(gormNewUser.Id).Update(gormNewUser)
-	if err != nil {
-		return err
+func (UserService) UpdateUser(gormNewUser *model.User) error {
+	result := Db.Model(gormNewUser).Updates(gormNewUser)
+	if result.Error != nil {
+		return result.Error
 	}
 	return nil
 }
 
-func (GormUserService) GormDeleteUser(id int) error {
-	gormUser := new(model.GormUser)
-	_, err := DbEngine.Id(id).Delete(gormUser)
-	if err != nil {
-		return err
+func (UserService) DeleteUser(id int) error {
+	gormUser := new(model.User)
+	result := Db.Delete(gormUser, id)
+	if result.Error != nil {
+		return result.Error
 	}
 	return nil
 }
