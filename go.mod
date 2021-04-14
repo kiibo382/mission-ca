@@ -18,5 +18,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
-	golang.org/x/tools v0.0.0-20200103221440-774c71fcf114 // indirect
+	golang.org/x/tools v0.0.0-20200103221440-774c71fcf114
+	gorm.io/driver/mysql v1.0.5
+	gorm.io/gorm v1.21.7
 )

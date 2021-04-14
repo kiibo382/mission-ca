@@ -1,41 +1,57 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com/kiibo382/mission-ca/pkg/model"
 )
 
 type UserService struct{}
 
+type UserDataStruct struct{
+	Name  string `json:"name"`
+}
+
 func (UserService) SetUser(user *model.User) error {
-	_, err := DbEngine.Insert(user)
-	if err != nil {
-		return err
+	result := Db.Create(user)
+	if result.Error != nil {
+		return result.Error
 	}
 	return nil
 }
 
-func (UserService) GetUserList() []model.User {
-	tests := make([]model.User, 0)
-	err := DbEngine.Distinct("id", "name").Limit(10, 0).Find(&tests)
-	if err != nil {
-		panic(err)
+func (UserService) GetUserData(user *model.User) UserDataStruct {
+	UserData := UserDataStruct{}
+	result := Db.Where("token = ?", user.Token).Select("name").Find(user)
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		panic(result.Error)
 	}
-	return tests
+	return UserData
 }
 
-func (UserService) UpdateUser(newUser *model.User) error {
-	_, err := DbEngine.Id(newUser.Id).Update(newUser)
-	if err != nil {
-		return err
+func (UserService) GetUserList() []model.User {
+	userList := make([]model.User, 0)
+	result := Db.Limit(10).Select("name").Find(&userList)
+	if result.Error != nil {
+		panic(result.Error)
+	}
+	return userList
+}
+
+func (UserService) UpdateUser(gormNewUser *model.User) error {
+	result := Db.Model(gormNewUser).Updates(gormNewUser)
+	if result.Error != nil {
+		return result.Error
 	}
 	return nil
 }
 
 func (UserService) DeleteUser(id int) error {
-	user := new(model.User)
-	_, err := DbEngine.Id(id).Delete(user)
-	if err != nil {
-		return err
+	gormUser := new(model.User)
+	result := Db.Delete(gormUser, id)
+	if result.Error != nil {
+		return result.Error
 	}
 	return nil
 }

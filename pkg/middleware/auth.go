@@ -1,16 +1,24 @@
 package middleware
 
 import (
+	"fmt"
 	"os"
 
-	jwtmiddleware "github.com/auth0/go-jwt-middleware"
-	jwt "github.com/form3tech-oss/jwt-go"
+	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go/request"
+	"github.com/gin-gonic/gin"
 )
 
-// JwtMiddleware check token
-var JwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
-	ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("SIGNINGKEY")), nil
-	},
-	SigningMethod: jwt.SigningMethodHS256,
-})
+func JwtMiddleware(c *gin.Context) {
+	_, err := request.ParseFromRequest(c.Request, request.OAuth2Extractor, func(token *jwt.Token) (interface{}, error) {
+		b := []byte(os.Getenv("SIGNINGKEY"))
+		return b, nil
+	})
+
+	if err == nil {
+		c.Next()
+	} else {
+		c.JSON(401, gin.H{"error": fmt.Sprint(err)})
+		c.Abort()
+	}
+}

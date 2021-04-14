@@ -12,13 +12,17 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 
-	jwt "github.com/form3tech-oss/jwt-go"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 func UserAdd(c *gin.Context) {
 	user := model.User{}
 	user.Id = uuid.New().String()
 	err := c.Bind(&user)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Bad Request")
+		return
+	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
@@ -28,22 +32,34 @@ func UserAdd(c *gin.Context) {
 	claims["iat"] = time.Now()
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 
-	tokenString, _ := token.SignedString([]byte(os.Getenv("SIGNINGKEY")))
-	user.Token = tokenString
-
-	if err != nil {
-		c.String(http.StatusBadRequest, "Bad request")
+	tokenString, tokenErr := token.SignedString([]byte(os.Getenv("SIGNINGKEY")))
+	if tokenErr != nil {
 		return
 	}
+	user.Token = tokenString
 
 	userService := service.UserService{}
 	err = userService.SetUser(&user)
 	if err != nil {
-		c.String(http.StatusInternalServerError, "Server Error")
+		c.String(http.StatusConflict, "Sorry, username alredy exists. Please change username.")
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{
 		"token": tokenString,
+	})
+}
+
+func UserGet(c *gin.Context) {
+	user := model.User{}
+	err := c.Bind(&user)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Bad request")
+		return
+	}
+	userService := service.UserService{}
+	UserData := userService.GetUserData(&user)
+	c.JSONP(http.StatusOK, gin.H{
+		"data": UserData,
 	})
 }
 
